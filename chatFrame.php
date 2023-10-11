@@ -1,6 +1,5 @@
 <?php
 
-session_start();
 
 
 use App\model\User;
@@ -12,10 +11,9 @@ if(isset($_POST['pseudo'])){
 
     $user=new User($_POST['pseudo']);
     $pseudo = $user->getPseudo();
-    $_SESSION[$pseudo]=$user;
+    
    
 }
-echo session_id();
 ?>
 
 <!DOCTYPE html>
@@ -29,6 +27,10 @@ echo session_id();
 <body>
     <h1>Bonjour <?=$pseudo?></h1>
     <div id='status'></div>
+    <div id='member-connected'>
+        <h3>membres connectés </h3>
+        <ul id='liste'></ul>
+    </div>
     <div id='frame'></div>
     <input type='text' id='content'>
     <input type='submit' value='envoyer' id='submit'>
@@ -38,7 +40,7 @@ echo session_id();
 <script>
 
 
-var connection = new WebSocket('ws://localhost:8080?pseudo=miaou');
+var connection = new WebSocket('ws://localhost:8080?pseudo=<?=$pseudo?>');
  
 connection.onopen=function(event){
 
@@ -52,7 +54,16 @@ connection.onmessage=function(event){
     var data = JSON.parse(event.data)
     var user = data.user;
     var content = data.content;
-    $('#frame').append("<p>"+user+" dit : "+content+"</p>");
+
+    if(user === 'liste'){
+
+        $('#liste').html('');
+        $("#liste").html(content);
+    }
+    else{
+        $('#frame').append("<p>"+user+" dit : "+content+"</p>");
+    }
+    
     
 }
 

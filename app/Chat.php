@@ -15,21 +15,25 @@ require_once __DIR__.'/../model/User.php';
 class Chat implements MessageComponentInterface {
 
     protected $clients; // a splObjectStorage which in all user connected object will be stored
-
+    protected $clientPseudo=[];
     //constructor 
 
 
     public function __construct(){
 
-        $this->clients= new \SplObjectStorage; 
+        $this->clients= []; 
         
     }
 
     public function onOpen(ConnectionInterface $connection) {
 
-        //when Chat is instanced we store the informations about the connection in the SplObjetcStorage
-        $this->clients->attach($connection);
-      //trying to get the pseudo of user
+        //when Chat is instanced we store the informations about the connection in the array clients
+       
+
+        
+
+
+      //trying to get the pseudo of user from ws url
         $str=$connection->httpRequest->getUri()->getQuery();
 
         $pattern='/=(.+)/';
@@ -38,11 +42,32 @@ class Chat implements MessageComponentInterface {
         $user=new User($matches[1]);
         //for now i set only user->getPseudo, set with user itself later ? 
 
-        $this->clients->setInfo($user->getPseudo());
-        echo 'Le client '.$connection->resourceId." vient de se connecter \n";//TD show information about client and connection ?        
-        echo 'Il y a actuellement '.count($this->clients)." utilisateur sur le chat \n";
+        array_push($this->clients,array('user'=>$user->getPseudo(),'connection'=>$connection));
 
-        var_dump($this->clients->getInfo());
+        array_push($this->clientPseudo,$user->getPseudo());
+        
+        // we send clientPseudo
+
+            //assing pseudoto array
+            $message=array(
+                'user'=>'liste',
+                'content'=>$this->clientPseudo
+            );
+
+            //sending to all users connected
+
+            foreach($this->clients as $client){
+
+                $client['connection']->send(json_encode($message));
+
+
+            }
+            
+        
+        
+        // echo 'Le client '.$connection->resourceId." vient de se connecter \n";//TD show information about client and connection ?        
+        // echo 'Il y a actuellement '.count($this->clients)." utilisateur sur le chat \n";
+
         
     }
 
@@ -62,7 +87,7 @@ class Chat implements MessageComponentInterface {
 
             $message=array(
 
-                'user'=>$from->resourceId,
+                'user'=>'le Chat ',
                 'content'=>"Vous ne pouvez envoyer de message car vous êtes seul sur le chat.\n"
             );
 
@@ -75,21 +100,33 @@ class Chat implements MessageComponentInterface {
         // for every client stored in clients we send $message
         else{
 
+
+            //need pseudo from
+
+            $pseudo='error';
+
             foreach($this->clients as $client){
 
-                //we don't want the client which sends the message
+                if($client['connection']===$from){
 
-                //if($from !== $client){
+                    $pseudo=$client['user'];
+                }
+            }
+
+            foreach($this->clients as $client){
+
+                
+
 
                     $message=array(
 
-                        'user'=>$this->clients->getInfo(),
+                        'user'=>$pseudo,
                         'content'=>$content
                     );
 
                     $jsonMessage=json_encode($message);
-                    $client->send($jsonMessage);
-            // }
+                    $client['connection']->send($jsonMessage);
+                
                 }
 
         }
@@ -102,7 +139,34 @@ class Chat implements MessageComponentInterface {
 
     public function onClose(ConnectionInterface $connection) {
 
-        $this->clients->detach($connection);
+       foreach($this->clients as $client){
+
+            if($client['connection']===$connection){
+
+                $keyPseudo=array_search($client['user'],$this->clientPseudo);
+               unset($this->clientPseudo[$keyPseudo]);
+               $key=array_search($client,$this->clients);
+               unset($this->clients[$key]);
+               
+               
+            }
+       }
+
+
+       $message=array(
+
+        'user'=>'liste',
+        'content'=>$this->clientPseudo
+    );
+
+    //sending to all users connected
+
+    foreach($this->clients as $client){
+
+        $client['connection']->send(json_encode($message));
+
+
+    }
         
         echo 'le client '.$connection->resourceId.' vient de déconnecter';
     }

@@ -1,5 +1,4 @@
 <?php
-session_start();
 
 use Ratchet\Server\IoServer;
 use Ratchet\Http\HttpServer;
@@ -13,7 +12,6 @@ require_once __DIR__.'/vendor/autoload.php';
 //by defauit ip address => 0.0.0.0 
 // assigne value to attribute loop, socket and app (MessageComponentInterface)
 
-$_SESSION['user']=[];
 
 $server = IoServer::factory(
 
