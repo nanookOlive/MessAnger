@@ -2,23 +2,22 @@
 
 namespace App;
 
-
-
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 use App\model\User;
 use Ratchet\Http\HttpServer;
 
 
-require_once __DIR__.'/../model/User.php';
+require_once __DIR__.'/../model/User.php';//no need to autoload just one classf for now
+
 
 class Chat implements MessageComponentInterface {
 
-    protected $clients; // a splObjectStorage which in all user connected object will be stored
+    protected $clients; // an array which in all user connected object will be stored
     protected $clientPseudo=[];
-    //constructor 
 
 
+    //constructor
     public function __construct(){
 
         $this->clients= []; 
@@ -29,32 +28,30 @@ class Chat implements MessageComponentInterface {
 
         //when Chat is instanced we store the informations about the connection in the array clients
        
+        //trying to get the pseudo of user from ws url
 
-        
-
-
-      //trying to get the pseudo of user from ws url
         $str=$connection->httpRequest->getUri()->getQuery();
-
         $pattern='/=(.+)/';
         preg_match($pattern,$str,$matches);
 
-        $user=new User($matches[1]);
+        $user=new User($matches[1]); // create user, could be good later 
+
         //for now i set only user->getPseudo, set with user itself later ? 
+        // create a client class ?
 
-        array_push($this->clients,array('user'=>$user->getPseudo(),'connection'=>$connection));
+        array_push($this->clients,array('user'=>$user->getPseudo(),'connection'=>$connection)); // storing the connection binded with pseudo
 
-        array_push($this->clientPseudo,$user->getPseudo());
+        array_push($this->clientPseudo,$user->getPseudo()); // storing pseudo
         
         // we send clientPseudo
 
-            //assing pseudoto array
             $message=array(
-                'user'=>'liste',
+
+                'user'=>'liste', // user liste is a condition read in ChatFrame ; 
                 'content'=>$this->clientPseudo
             );
 
-            //sending to all users connected
+            //sending message to all users connected ; saying new client is connected
 
             foreach($this->clients as $client){
 
@@ -63,10 +60,10 @@ class Chat implements MessageComponentInterface {
 
             }
             
+        // on terminal
         
-        
-        // echo 'Le client '.$connection->resourceId." vient de se connecter \n";//TD show information about client and connection ?        
-        // echo 'Il y a actuellement '.count($this->clients)." utilisateur sur le chat \n";
+        echo $user->getPseudo()." vient de se connecter \n";//TD show information about client and connection ?        
+        echo 'Il y a actuellement '.count($this->clients)." utilisateur sur le chat \n";
 
         
     }
@@ -143,12 +140,17 @@ class Chat implements MessageComponentInterface {
 
             if($client['connection']===$connection){
 
+                //on terminal
+                echo $client['user'] .' vient de déconnecter';
+                echo 'Il y a actuellement '.count($this->clients)." utilisateur sur le chat \n";
+
                 $keyPseudo=array_search($client['user'],$this->clientPseudo);
-               unset($this->clientPseudo[$keyPseudo]);
-               $key=array_search($client,$this->clients);
-               unset($this->clients[$key]);
-               
-               
+                unset($this->clientPseudo[$keyPseudo]);//delete the pseudo of liste
+
+
+                //unset client from list clients 
+                $key=array_search($client,$this->clients);
+                unset($this->clients[$key]);
             }
        }
 
@@ -168,7 +170,7 @@ class Chat implements MessageComponentInterface {
 
     }
         
-        echo 'le client '.$connection->resourceId.' vient de déconnecter';
+       
     }
 
     public function onError(ConnectionInterface $connection, \Exception $exception) {
@@ -176,4 +178,8 @@ class Chat implements MessageComponentInterface {
         echo 'Une erreur est survenue => '.$exception->getMessage().'\n';
 
     }
+
+    //function use to send message to all clients of $clients
+    //with a step to encode in json format 
+    private function sendMessage(){}
 }

@@ -63,6 +63,10 @@ connection.onmessage=function(event){
     else{
         $('#frame').append("<p>"+user+" dit : "+content+"</p>");
     }
+
+    //clear input field 
+
+    $("#content").val('');
     
     
 }
