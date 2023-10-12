@@ -62,9 +62,7 @@ class Chat implements MessageComponentInterface {
             
         // on terminal
         
-        echo $user->getPseudo()." vient de se connecter \n";//TD show information about client and connection ?        
-        echo 'Il y a actuellement '.count($this->clients)." utilisateur sur le chat \n";
-
+        $this->chatStatus($user->getPseudo());
         
     }
 
@@ -141,9 +139,8 @@ class Chat implements MessageComponentInterface {
             if($client['connection']===$connection){
 
                 //on terminal
-                echo $client['user'] .' vient de déconnecter';
-                echo 'Il y a actuellement '.count($this->clients)." utilisateur sur le chat \n";
-
+                $this->chatStatus($client['user']);
+                
                 $keyPseudo=array_search($client['user'],$this->clientPseudo);
                 unset($this->clientPseudo[$keyPseudo]);//delete the pseudo of liste
 
@@ -182,4 +179,10 @@ class Chat implements MessageComponentInterface {
     //function use to send message to all clients of $clients
     //with a step to encode in json format 
     private function sendMessage(){}
+
+    private function chatStatus(string $pseudo):void 
+    {
+        echo $pseudo .' vient de déconnecter';
+        echo 'Il y a actuellement '.count($this->clients)." utilisateur sur le chat \n";
+    }
 }
