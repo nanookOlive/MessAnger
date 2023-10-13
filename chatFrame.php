@@ -32,7 +32,7 @@ if(isset($_POST['pseudo'])){
         <ul id='liste'></ul>
     </div>
     <div id='frame'></div>
-    <input type='text' id='content'>
+    <input type='text' id='content' required>
     <input type='submit' value='envoyer' id='submit'>
     
 </body>
@@ -76,8 +76,11 @@ connection.onmessage=function(event){
 
 $('#submit').on('click',function(){
 
-    
-   connection.send($('#content').val());
+    if($('#content').val()!==''){
+
+        connection.send($('#content').val());
+
+    }
 })
 
 
