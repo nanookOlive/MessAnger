@@ -34,6 +34,7 @@ if(isset($_POST['pseudo'])){
     <div id='frame'></div>
     <input type='text' id='content' required>
     <input type='submit' value='envoyer' id='submit'>
+    <button type='button' id='deco'>Se deconnecter</button>
     
 </body>
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
@@ -96,6 +97,18 @@ $('#submit').on('click',function(){
     }
 });
 
+$('#deco').on('click',function(){
+
+    connection.close();
+
+})
+connection.onclose=function(){
+
+    //status become disconnect
+    $("#status").html('');
+    $("#status").html('Vous êtes déconnecté');
+    $('#liste').html('');
+}
 
 </script>
 </html>
