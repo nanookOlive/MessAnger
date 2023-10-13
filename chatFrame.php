@@ -1,7 +1,5 @@
 <?php
 
-
-
 use App\model\User;
 
 require_once 'model/User.php';
@@ -11,8 +9,7 @@ if(isset($_POST['pseudo'])){
 
     $user=new User($_POST['pseudo']);
     $pseudo = $user->getPseudo();
-    
-   
+     
 }
 ?>
 
@@ -22,19 +19,22 @@ if(isset($_POST['pseudo'])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel='stylesheet' href='app.css'>
-    <title>Document</title>
+    <title>Be Nasty</title>
 </head>
 <body>
-    <h1>Bonjour <?=$pseudo?></h1>
+    <div class='welcome'>Welcome <?=$pseudo?></div>
     <div id='status'></div>
-    <div id='member-connected'>
-        <h3>membres connectés </h3>
-        <ul id='liste'></ul>
+    <div class='chat-container'>
+        
+        <div id='frame'></div>
+        <div id='member-connected'>
+            <h3>membres connectés </h3>
+            <ul id='liste'></ul>
+        </div>
     </div>
-    <div id='frame'></div>
     <input type='text' id='content'>
-    <input type='submit' value='envoyer' id='submit'>
-    <button type='button' id='deco'>Se deconnecter</button>
+    <input type='submit' value='Yell' id='submit'>
+    <button type='button' id='deco'>Rage Quit</button>
     
 </body>
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
@@ -45,7 +45,7 @@ var connection = new WebSocket('ws://localhost:8080?pseudo=<?=$pseudo?>');
  
 connection.onopen=function(event){
 
-    $('#status').append('vous êtes connecté');
+    $('#status').append('you\'re connected ... go ahead !!!');
   
    
  }
@@ -106,7 +106,7 @@ connection.onclose=function(){
 
     //status become disconnect
     $("#status").html('');
-    $("#status").html('Vous êtes déconnecté');
+    $("#status").html('You\'re no longer connected :(');
     $('#liste').html('');
 }
 
