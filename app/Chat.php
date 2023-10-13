@@ -110,9 +110,7 @@ class Chat implements MessageComponentInterface {
 
             foreach($this->clients as $client){
 
-                
-
-
+   
                     $message=array(
 
                         'user'=>$pseudo,
@@ -125,11 +123,6 @@ class Chat implements MessageComponentInterface {
                 }
 
         }
-       
-        
-
-
-
     }
 
     public function onClose(ConnectionInterface $connection) {
@@ -139,7 +132,7 @@ class Chat implements MessageComponentInterface {
             if($client['connection']===$connection){
 
                 //on terminal
-                $this->chatStatus($client['user']);
+                $this->chatStatus($client['user'],FALSE);
                 
                 $keyPseudo=array_search($client['user'],$this->clientPseudo);
                 unset($this->clientPseudo[$keyPseudo]);//delete the pseudo of liste
@@ -180,9 +173,17 @@ class Chat implements MessageComponentInterface {
     //with a step to encode in json format 
     private function sendMessage(){}
 
-    private function chatStatus(string $pseudo):void 
+    //give som info on the chat on terminal
+    
+    private function chatStatus(string $pseudo,bool $flag=TRUE):void 
     {
-        echo $pseudo .' vient de déconnecter';
-        echo 'Il y a actuellement '.count($this->clients)." utilisateur sur le chat \n";
+        if($flag){
+            echo $pseudo." vient de se connecter.\n";
+        }
+        else{
+            echo $pseudo ." vient de se déconnecter.\n";
+        }
+        
+        echo 'Il y a actuellement '.count($this->clients)." utilisateur sur le chat.\n";
     }
 }

@@ -58,7 +58,10 @@ connection.onmessage=function(event){
     if(user === 'liste'){
 
         $('#liste').html('');
-        $("#liste").html(content);
+        $.each(content,function(){
+
+            $('#liste').append('<li>'+this+'</li>')
+        });
     }
     else{
         $('#frame').append("<p>"+user+" dit : "+content+"</p>");
