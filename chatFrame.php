@@ -73,15 +73,28 @@ connection.onmessage=function(event){
     
     
 }
+//sending message on enter
+
+$('input').on('keypress',function(event){
+
+    if(event.key==='Enter'){
+
+        if($('#content').val()!==''){
+
+        connection.send($('#content').val());
+
+        }
+    }
+    
+})
 
 $('#submit').on('click',function(){
 
     if($('#content').val()!==''){
 
-        connection.send($('#content').val());
-
+    connection.send($('#content').val());
     }
-})
+});
 
 
 </script>
