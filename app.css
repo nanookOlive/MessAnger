@@ -1,22 +1,70 @@
+.chat-body{
+
+  background-color : #303030;
+  color : white;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+
+.welcome{
+
+    display:flex;
+    font-family: 'Pacifico', cursive;
+    font-size: xx-large;
+}
+
+#status{
+
+    margin-left:50px;
+}
+.picture-catcher{
+
+    width:500px;
+    height:500px;
+    margin : 30px;
+}
+.chat-mamaFlex{
+
+    display: flex;
+    font-family: 'Montserrat', sans-serif;
+}
+
 .chat-container{
 
     display:flex;
 }
 #frame{
 
-    width:700px;
+    width:500px;
     height:750px;
-    background-color: black;
-    color:white;
+    border : 1px solid black;
     overflow: scroll;
+    background-color: white;
+    color :black;
+    margin : 30px;
 }
 #member-connected{
 
     margin-left :50px;
+    height : 300px;
+    overflow: scroll;
 }
 
+.message-user{
 
+    margin-left:20px;
+}
 
+.button-input{
+
+    margin:30px;
+}
+li{
+
+    margin:10px;
+}
 
 /*----------------------------------------------------ACCES---------------------------------------------------------------------*/
 
