@@ -131,8 +131,7 @@ class Chat implements MessageComponentInterface {
 
             if($client['connection']===$connection){
 
-                //on terminal
-                $this->chatStatus($client['user'],FALSE);
+             
                 
                 $keyPseudo=array_search($client['user'],$this->clientPseudo);
                 unset($this->clientPseudo[$keyPseudo]);//delete the pseudo of liste
@@ -140,7 +139,9 @@ class Chat implements MessageComponentInterface {
 
                 //unset client from list clients 
                 $key=array_search($client,$this->clients);
-                unset($this->clients[$key]);
+                unset($this->clients[$key]);   
+                //on terminal
+                $this->chatStatus($client['user'],FALSE);
             }
        }
 
@@ -171,11 +172,27 @@ class Chat implements MessageComponentInterface {
 
     //function use to send message to all clients of $clients
     //with a step to encode in json format 
-    private function sendMessage(){}
+    private function sendMessage(mixed $content){
+
+        $message=array(
+
+            'user'=>'liste', // user liste is a condition read in ChatFrame ; 
+            'content'=>$this->clientPseudo
+        );
+
+        //sending message to all users connected ; saying new client is connected
+
+        foreach($this->clients as $client){
+
+            $client['connection']->send(json_encode($message));
+
+
+        }
+    }
 
     //give som info on the chat on terminal
-    
-    private function chatStatus(string $pseudo,bool $flag=TRUE):void 
+
+    private function chatStatus(string $pseudo, bool $flag=TRUE):void 
     {
         if($flag){
             echo $pseudo." vient de se connecter.\n";
