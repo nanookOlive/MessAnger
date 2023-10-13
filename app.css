@@ -6,3 +6,41 @@
     color:white;
     overflow: scroll;
 }
+
+
+
+
+
+/*----------------------------------------------------ACCES---------------------------------------------------------------------*/
+
+.access-body{
+
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height:100vh;
+    justify-content: center;
+}
+.mama-flex{
+
+
+    width : 500px;
+    height :500px;
+    display : flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-image: url('pict_acces.jpg');
+    background-position: center;
+    background-size: contain;
+   
+}
+
+#formu-connect{
+
+
+    display:flex;
+    flex-direction: column;
+
+}

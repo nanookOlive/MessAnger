@@ -32,7 +32,7 @@ if(isset($_POST['pseudo'])){
         <ul id='liste'></ul>
     </div>
     <div id='frame'></div>
-    <input type='text' id='content' required>
+    <input type='text' id='content'>
     <input type='submit' value='envoyer' id='submit'>
     <button type='button' id='deco'>Se deconnecter</button>
     
