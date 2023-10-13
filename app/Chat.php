@@ -43,22 +43,10 @@ class Chat implements MessageComponentInterface {
 
         array_push($this->clientPseudo,$user->getPseudo()); // storing pseudo
         
-        // we send clientPseudo
+        // we send list of pseudo from user who connects to all users
 
-            $message=array(
-
-                'user'=>'liste', // user liste is a condition read in ChatFrame ; 
-                'content'=>$this->clientPseudo
-            );
-
-            //sending message to all users connected ; saying new client is connected
-
-            foreach($this->clients as $client){
-
-                $client['connection']->send(json_encode($message));
-
-
-            }
+        $this->sendMessage('liste',$this->clientPseudo);
+            
             
         // on terminal
         
@@ -80,25 +68,18 @@ class Chat implements MessageComponentInterface {
 
         if(count($this->clients)==1){ // if user is alone on the chat
 
-            $message=array(
-
-                'user'=>'le Chat ',
-                'content'=>"Vous ne pouvez envoyer de message car vous êtes seul sur le chat.\n"
-            );
-
-            $jsonMessage=json_encode($message);
-            $from->send($jsonMessage); //could be a user statut ??? 
+                $user='le Chat ';
+                $content="Vous ne pouvez envoyer de message car vous êtes seul sur le chat.\n";
+           
+            $this->sendMessage($user,$content);
 
         }
-
         
         // for every client stored in clients we send $message
         else{
 
 
             //need pseudo from
-
-            $pseudo='error';
 
             foreach($this->clients as $client){
 
@@ -108,19 +89,8 @@ class Chat implements MessageComponentInterface {
                 }
             }
 
-            foreach($this->clients as $client){
+            $this->sendMessage($pseudo,$content);
 
-   
-                    $message=array(
-
-                        'user'=>$pseudo,
-                        'content'=>$content
-                    );
-
-                    $jsonMessage=json_encode($message);
-                    $client['connection']->send($jsonMessage);
-                
-                }
 
         }
     }
@@ -132,8 +102,9 @@ class Chat implements MessageComponentInterface {
             if($client['connection']===$connection){
 
              
-                
-                $keyPseudo=array_search($client['user'],$this->clientPseudo);
+                $pseudo=$client['user'];
+                $this->sendMessage('Le chat',"$pseudo vient de se déconnecter");
+                $keyPseudo=array_search($pseudo,$this->clientPseudo);
                 unset($this->clientPseudo[$keyPseudo]);//delete the pseudo of liste
 
 
@@ -145,21 +116,9 @@ class Chat implements MessageComponentInterface {
             }
        }
 
-
-       $message=array(
-
-        'user'=>'liste',
-        'content'=>$this->clientPseudo
-    );
-
-    //sending to all users connected
-
-    foreach($this->clients as $client){
-
-        $client['connection']->send(json_encode($message));
-
-
-    }
+       $this->sendMessage('liste',$this->clientPseudo);//refresh the list of users connected
+       
+    
         
        
     }
@@ -172,12 +131,12 @@ class Chat implements MessageComponentInterface {
 
     //function use to send message to all clients of $clients
     //with a step to encode in json format 
-    private function sendMessage(mixed $content){
+    private function sendMessage(string $user,mixed $content){
 
         $message=array(
 
-            'user'=>'liste', // user liste is a condition read in ChatFrame ; 
-            'content'=>$this->clientPseudo
+            'user'=>$user, // user liste is a condition read in ChatFrame ; 
+            'content'=>$content
         );
 
         //sending message to all users connected ; saying new client is connected
@@ -185,7 +144,6 @@ class Chat implements MessageComponentInterface {
         foreach($this->clients as $client){
 
             $client['connection']->send(json_encode($message));
-
 
         }
     }
