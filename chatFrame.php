@@ -1,7 +1,6 @@
 <?php
 
 use App\model\User;
-
 require_once 'model/User.php';
 
 

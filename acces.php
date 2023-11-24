@@ -1,4 +1,5 @@
 <?php
+shell_exec("php server.php");
 
 ?>
 
