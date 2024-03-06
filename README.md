@@ -1,4 +1,4 @@
-# <center>MessAnger (*php vanilla-perso*)<center>
+# <center>MessAnger (*php vanilla-projet perso*)<center>
 J'ai réalisé cette petite appplication dans but de tester le protocole Websocket. Quoi de mieux qu'un [chat](https://nanookpandora.com/ratchetTest/acces.php) :)
 
 
