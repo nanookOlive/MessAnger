@@ -7,12 +7,12 @@ J'ai réalisé cette petite appplication dans but de tester le protocole Websock
 
 - possibilité de se connecter sans avoir à créer un profil
 - rejoindre un canal de discussion unique 
-- voir les autres utilisateurs conectés
-- envoyer et recevoir les messages instantanement sans rafraichir la page
+- voir les autres utilisateurs connectés
+- envoyer et recevoir les messages instantanément sans rafraîchir la page
 - afficher les états du serveur coté console (nb utilisateur, nouvel arrivé, etc ...)
 
 
 # Spécificités techniques
 
 - utilisation de Ratchet pour la partie websocket
-- javascript coté client pour se connecter au socket
+- Javascript coté client pour se connecter au socket
